@@ -1,5 +1,7 @@
 
 
+ 
+
 
 alert("Bienvenidos a marmoleria Rocas Ornamentales")
 
@@ -54,7 +56,9 @@ const filtrarp = document.getElementById("filtrar");
 filtrarp.addEventListener("click", () => { filtrarProducto(); });
 
 const agregarp = document.getElementById("agregar");
-agregarp.addEventListener("click", () => { agregarProducto(); });
+agregarp.addEventListener("click", () => { agregarProducto(); })
+
+body.innerHTML = "";
 
 function filtrarProducto() {
     const body = document.querySelector("body");
@@ -77,11 +81,11 @@ function filtrarProducto() {
             card.appendChild(nombre);
 
             const precio = document.createElement("p");
-            precio.textContent = "Precio: ${producto.precio}";
+            precio.textContent = `Precio: ${producto.precio}`;
             card.appendChild(precio);
 
             const stock = document.createElement("p");
-            stock.textContent = "stock: ${producto.stock}";
+            stock.textContent = `Stock: ${producto.stock}`;
             card.appendChild(stock);
 
             container.appendChild(card)
@@ -90,7 +94,7 @@ function filtrarProducto() {
         body.appendChild(container);
     }
     else {
-        alert("No se encontro ninguna coincidencia con" );
+        alert("No se encontro ninguna coincidencia" );
     }
 }
 
@@ -98,76 +102,79 @@ function agregarProducto() {
 
     const form = document.createElement("form");
 
-    form.innerHTML = "
+    form.innerHTML = `
+    <label for="nombre-input">Nombre:</label>
+    <input id="nombre-input" type="text" required>
 
-        <label for= "nombre-input"> Nombre: </label>
-        <input id="nombre-input" type="text" required>
+    <label for="precio-input">Precio:</label>
+    <input id="precio-input" type="number" step="0.01" required>
 
-        <label for="precio-input">Precio:</label>
-        <input id="precio-input" type="number" step="0,01" required>
+    <label for="stock-input">Stock:</label>
+    <input id="stock-input" type="number" step="1" required>
 
-        <label for="stock-input">Stock:</label>
-        <input id="stock-input" type="number" step="1" required>
+    <button type="submit">Agregar</button>`;
+ 
+    form.addEventListener("submit", function (event) {
 
-        <button type="submit">Agregar</button>";
-
-
-        form.addEventListener("submit", function (event) {
-
-        event.preventDefault();
+    event.preventDefault();
 
         const nombreInput=document.getElementById("nombre-input").value.trim();
         const precioInput=parseFloat(document.getElementById("precio-input").value);
         const stockInput=parseInt(document.getElementById("stock-input").value);
 
         if (isNaN(precioInput) || isNaN(stockInput) || nombreInput === "") {
-         alert("valor invalido")
-        return;
-        }
+            alert("valor invalido")
+            return;
+            }
 
         const producto= new Producto(nombreInput,precioInput,stockInput);
 
         if (complementarios.some((elemento) => elemento.nombre ===producto .nombre)) {
-             alert("El producto ya existe");
-             return;
-        }
+                alert("El producto ya existe");
+                return;
+            }
 
-        complementarios.push(Producto);
+           
+        complementarios.push(Producto); 
 
-        localStorage.setItem("productos",JSON.stringify(complementarios));
-        alert("se ha agregado el producto"${producto.nombre}" a la lista.");
+            localStorage.setItem("productos",JSON.stringify(complementarios));
+            alert(`Se ha agregado el producto ${producto.nombre}  a la lista.`);
+         
 
-        console.table(complementarios);
+            console.table(complementarios);
 
-        const container = document.createElement('div');
-        container.classList.add('card-container');
+            const container = document.createElement('div');
+            container.classList.add('card-container');
 
-        complementarios.forEach(producto)=>{
+            
+            complementarios.forEach((producto) => { 
+                
+                const card= document.createElement('div');
+                container.classList.add('card');
 
-        const card= document.createElement('div');
-        container.classList.add('card');
+                const nombre = document.createElement('h2')
+                nombre.textContent=producto.nombre;
+                card.appendChild(nombre);
 
-        const nombre = document.createElement('h2')
-        nombre.textContent=producto.nombre;
-        card.appendChild(nombre);
+                const precio = document.createElement('p')
+                precio.textContent = `Precio: ${producto.precio}`; //comillas especiales  
+                card.appendChild(precio);
 
-        const precio = document.createElement('p')
-        precio.textContent='Precio: ${producto.stock}';
-        card.appendChild(precio);
+                const stock = document.createElement('p')
+                stock.textContent = `Stock: ${producto.stock}`; //comillas especiales 
+                card.appendChild(stock);
 
-        const stock = document.createElement('p')
-        stock.textContent='Stock:${producto.stock}';
-        card.appendChild(stock);
+                container.appendChild(card);
+            });
 
-        container.appendChild(card);
+            const body = document.querySelector('body');
+            body.appendChild(container);
+            form.reset();
         });
-
-        const body= document.querySelector('body')
-        body.appendChild(container);
-        form.reset();
-        })
 
         const body = document.querySelector('body');
         body.appendChild(form);
                      
+    
 }
+ 
